@@ -6,7 +6,7 @@ const useUserStore = defineStore('userStore', () => {
     1: {
       name: "Игорь",
       surname: "Тарасов",
-      stage: "Инженер",          // ← исправил опечатку
+      stage: "Инженер",
       age: 25,
       address: "Москва, пр. Победы, д.21"
     },
