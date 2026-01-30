@@ -2,6 +2,7 @@
   <CustomTable
     :heads="['Имя', 'Фамилия', 'Стаж', 'Возраст', 'Адрес']"
     :data="users"
+    @select-bar="(index) => console.log(index)"
   />
   <button @click="userStore.addUser({name:'Игорь', surname: 'Бутусов', stage: 'd', age: 21, address: 'a'})"></button>
 </template>
