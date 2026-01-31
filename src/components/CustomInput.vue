@@ -1,12 +1,10 @@
 <template>
   <div class="wrapper">
-    <label class>
-      {{label}}
-    </label>
     <input
       type="text"
       :placeholder="placeholder"
-      @input="handleInput"
+      :value="model"
+      @input="(e) => model = e.target.value"
     >
   </div>
 
@@ -19,14 +17,6 @@
 
 <script setup>
 defineProps({
-  modelValue: {
-    type: [String, Number],
-    default: ''
-  },
-  label: {
-    type: String,
-    default: ''
-  },
   placeholder: {
     type: String,
     default: 'Введите значение...'
@@ -37,11 +27,7 @@ defineProps({
   }
 });
 
-const emit = defineEmits(['update:modelValue'])
-
-const handleInput = (value) => {
-  emit('update:modelValue', value)
-}
+const model = defineModel();
 </script>
 
 <style scoped>
@@ -49,15 +35,9 @@ const handleInput = (value) => {
   width: 100%;
 }
 
-label {
-  padding:0 8px;
-
-  font-size: 14px;
-  font-weight: lighter;
-}
-
 input {
   width: 100%;
+  box-sizing: border-box;
 
   padding: 8px 12px;
 
@@ -65,6 +45,12 @@ input {
   border-radius: 8px;
   border: 2px solid #b1b1b1;
 
+  transition: all 0.2s ease;
+}
+
+input:focus {
+  box-shadow: 0 4px 8px #cdcdcd;
+  border-color: #808080;
   transition: all 0.2s ease;
 }
 </style>

@@ -2,7 +2,7 @@
   <div
     class="wrapper"
     v-if="isOpen"
-    @click.self="emit('clickOutside')"
+    @click.self="emit('close')"
   >
     <div class="modal">
       <slot name="header"/>
@@ -17,7 +17,7 @@ import { defineEmits } from 'vue'
 defineProps({
   isOpen: Boolean,
 });
-const emit = defineEmits(['clickOutside'])
+const emit = defineEmits(['close'])
 
 </script>
 

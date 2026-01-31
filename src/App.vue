@@ -1,21 +1,17 @@
 <template>
+  <CustomButton @click="openAddForm">
+    Добавить
+  </CustomButton>
   <CustomTable
     :heads="['Имя', 'Фамилия', 'Стаж', 'Возраст', 'Адрес']"
     :data="users"
     @select-bar="(index) => console.log(index)"
   />
-  <CustomButton @click="userStore.addUser({name:'Игорь', surname: 'Бутусов', stage: 'd', age: 21, address: 'a'})">
-    Добавить
-  </CustomButton>
-  <CustomModal
-    :is-open="showModal"
-    @click-outside="closeModal"
-  >
-  </CustomModal>
-  <custom-input
-    label="Имя:"
-    placeholder="Введите имя:"
-  ></custom-input>
+  <AddUserForm
+    :is-open="showAddForm"
+    @close="closeAddForm"
+    @accept="(user) => addUser(user)"
+  />
 </template>
 
 <script setup>
@@ -25,14 +21,24 @@ import CustomModal from "@/components/CustomModal.vue";
 import {computed, ref} from "vue";
 import CustomButton from "@/components/CustomButton.vue";
 import CustomInput from "@/components/CustomInput.vue";
+import AddUserForm from "@/components/AddUserForm.vue";
 
 const userStore = useUserStore();
 const users = computed(() => userStore.users)
 
-const showModal = ref(true);
+const showAddForm = ref(true);
 
-const closeModal = () => {
-  showModal.value = false;
+const openAddForm = () => {
+  showAddForm.value = true;
+}
+
+const closeAddForm = () => {
+  showAddForm.value = false;
+}
+
+const addUser = (user) => {
+  userStore.addUser(user);
+  showAddForm.value = false;
 }
 </script>
 
