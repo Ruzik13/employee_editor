@@ -1,7 +1,7 @@
 <template>
   <CustomModal
     :is-open="isOpen"
-    @close="emit('close')"
+    @close="handleClose"
   >
     <template #header>
       <h2>Добавить пользователя</h2>
@@ -32,12 +32,12 @@
      <div class="button-area">
        <CustomButton
          variant="outline"
-         @click="emit('close')"
+         @click="handleClose"
        >
          Отмена
        </CustomButton>
        <CustomButton
-        @click="emit('accept', user)"
+        @click="handleAccept"
        >
          Подтвердить
        </CustomButton>
@@ -64,7 +64,26 @@ const user = reactive({
   stage: null,
   age: null,
   address: null,
-})
+});
+
+const resetForm = () => {
+  user.name = null;
+  user.surname = null;
+  user.stage = null;
+  user.age = null;
+  user.address = null;
+}
+
+const handleClose = () => {
+  emit("close");
+  resetForm();
+}
+
+const handleAccept = () => {
+  emit("accept", user);
+  resetForm();
+  emit('close')
+}
 </script>
 
 <style scoped>

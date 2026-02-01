@@ -1,44 +1,75 @@
 <template>
-  <CustomButton @click="openAddForm">
+  <CustomButton
+    @click="openAddForm"
+  >
     Добавить
   </CustomButton>
   <CustomTable
     :heads="['Имя', 'Фамилия', 'Стаж', 'Возраст', 'Адрес']"
     :data="users"
-    @select-bar="(index) => console.log(index)"
+    @select-bar="openEditForm"
   />
   <AddUserForm
     :is-open="showAddForm"
     @close="closeAddForm"
-    @accept="(user) => addUser(user)"
+    @accept="addUser"
+  />
+  <EditUserForm
+    :is-open="showEditForm"
+    :user-data="selectedUser"
+    @close="closeEditForm"
+    @edit="editUser"
+    @delete="deleteUser"
   />
 </template>
 
 <script setup>
-import useUserStore from "@/stores/userStore.js";
-import CustomTable from "@/components/CustomTable.vue";
-import CustomModal from "@/components/CustomModal.vue";
-import {computed, ref} from "vue";
-import CustomButton from "@/components/CustomButton.vue";
-import CustomInput from "@/components/CustomInput.vue";
-import AddUserForm from "@/components/AddUserForm.vue";
+import useUserStore from "@/stores/userStore.js"
+import CustomTable from "@/components/CustomTable.vue"
+import { computed, ref } from "vue"
+import CustomButton from "@/components/CustomButton.vue"
+import AddUserForm from "@/components/AddUserForm.vue"
+import EditUserForm from "@/components/EditUserForm.vue"
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 const users = computed(() => userStore.users)
 
-const showAddForm = ref(true);
+const selectedId = ref(null)
+const selectedUser = ref(null)
+
+const showAddForm = ref(false)
+const showEditForm = ref(false)
 
 const openAddForm = () => {
-  showAddForm.value = true;
+  showAddForm.value = true
+}
+
+const openEditForm = (index) => {
+  selectedId.value = index
+  selectedUser.value = { ...users.value[index] }
+  showEditForm.value = true
 }
 
 const closeAddForm = () => {
-  showAddForm.value = false;
+  showAddForm.value = false
+}
+
+const closeEditForm = () => {
+  showEditForm.value = false
+  selectedUser.value = null
 }
 
 const addUser = (user) => {
-  userStore.addUser(user);
-  showAddForm.value = false;
+  userStore.addUser(user)
+}
+
+const editUser = (updatedData) => {
+  userStore.editUser(selectedId.value, updatedData)
+}
+
+const deleteUser = () => {
+  if (selectedId.value === null) return
+  userStore.deleteUser(selectedId.value)
 }
 </script>
 
