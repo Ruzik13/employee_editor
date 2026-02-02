@@ -47,6 +47,7 @@ const emit = defineEmits(['selectBar']);
 .custom-table {
   width: 100%;
 
+  table-layout: fixed;
   border-collapse: collapse;
   border-spacing: 0;
 }
@@ -57,8 +58,11 @@ const emit = defineEmits(['selectBar']);
   text-align: left;
   font-weight: 600;
   color: #f6f6f6;
-
   background-color: #000000;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .custom-table__head th:first-child {
@@ -77,9 +81,12 @@ const emit = defineEmits(['selectBar']);
   padding: 12px 16px;
 
   color: #1a1a1a;
-
   border-bottom: 1px solid #e0e0e0;
   transition: background-color 0.18s ease;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .custom-table__body tr:hover td {

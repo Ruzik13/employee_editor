@@ -6,11 +6,31 @@
 
     <template #content>
       <form>
-        <CustomInput v-model="user.name" placeholder="Имя:" />
-        <CustomInput v-model="user.surname" placeholder="Фамилия:" />
-        <CustomInput v-model="user.stage" placeholder="Стаж:" />
-        <CustomInput v-model="user.age" placeholder="Возраст:" />
-        <CustomInput v-model="user.address" placeholder="Адрес:" />
+        <CustomInput
+          label="Имя:"
+          :error="errors.name"
+          v-model="user.name"
+        />
+        <CustomInput
+          label="Фамилия:"
+          :error="errors.surname"
+          v-model="user.surname"
+        />
+        <CustomInput
+          label="Стаж:"
+          :error="errors.stage"
+          v-model="user.stage"
+        />
+        <CustomInput
+          label="Возраст:"
+          :error="errors.age"
+          v-model="user.age"
+        />
+        <CustomInput
+          label="Адрес:"
+          :error="errors.address"
+          v-model="user.address"
+        />
       </form>
 
       <div class="button-area">
@@ -32,7 +52,7 @@
 </template>
 
 <script setup>
-import {computed} from 'vue'
+import {computed, ref, watch} from 'vue'
 import CustomModal from "@/components/CustomModal.vue"
 import CustomInput from "@/components/CustomInput.vue"
 import CustomButton from "@/components/CustomButton.vue"
@@ -44,15 +64,59 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'edit', 'delete'])
 
-const user = computed(() => props.userData)
+const user = ref(null);
+
+watch(
+  () => props.isOpen,
+  (isOpen) => {
+    if (isOpen && props.userData) {
+      user.value = { ...props.userData }   // глубокая копия
+      errors.value = {}
+    }
+  },
+  { immediate: true }
+)
+
+const errors = ref({})
+
+const validateError = () => {
+  const newErrors = {};
+
+  if (!user.value.name) newErrors.name = 'Введите имя';
+  if (!user.value.surname) newErrors.surname = 'Введите фамилию';
+  if (!user.value.stage) newErrors.stage = 'Введите стаж';
+  if (!user.value.age) {
+    newErrors.age = 'Введите возраст';
+  } else if (!/^\d+$/.test(user.value.age)) {
+    newErrors.age = 'Только цифры';
+  }
+  if (!user.value.address) newErrors.address = 'Введите адрес';
+
+  errors.value = newErrors;
+  return Object.keys(newErrors).length === 0;
+}
+
+const resetForm = () => {
+  user.value.name = null;
+  user.value.surname = null;
+  user.value.stage = null;
+  user.value.age = null;
+  user.value.address = null;
+  errors.value = {};
+}
 
 const handleClose = () => {
-  emit('close')
+  emit('close');
+  resetForm();
 }
 
 const handleAccept = () => {
-  emit('edit', user.value)
-  emit('close')
+  if (!validateError()) {
+  } else {
+    emit("edit", {...user.value});
+    resetForm();
+    emit('close')
+  }
 }
 
 const handleDelete = () => {

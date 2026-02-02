@@ -9,23 +9,28 @@
     <template #content>
       <form>
         <CustomInput
-          placeholder="Имя:"
+          label="Имя:"
+          :error="errors.name"
           v-model="user.name"
         />
         <CustomInput
-          placeholder="Фамилия:"
+          label="Фамилия:"
+          :error="errors.surname"
           v-model="user.surname"
         />
         <CustomInput
-          placeholder="Стаж:"
+          label="Стаж:"
+          :error="errors.stage"
           v-model="user.stage"
         />
         <CustomInput
-          placeholder="Возраст:"
+          label="Возраст:"
+          :error="errors.age"
           v-model="user.age"
         />
         <CustomInput
-          placeholder="Адрес:"
+          label="Адрес:"
+          :error="errors.address"
           v-model="user.address"
         />
       </form>
@@ -50,7 +55,7 @@
 import CustomModal from "@/components/CustomModal.vue";
 import CustomInput from "@/components/CustomInput.vue";
 import CustomButton from "@/components/CustomButton.vue";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 
 defineProps({
   isOpen: Boolean,
@@ -66,12 +71,32 @@ const user = reactive({
   address: null,
 });
 
+const errors = ref({})
+
+const validateError = () => {
+  const newErrors = {};
+
+  if (!user.name) newErrors.name = 'Введите имя';
+  if (!user.surname) newErrors.surname = 'Введите фамилию';
+  if (!user.stage) newErrors.stage = 'Введите стаж';
+  if (!user.age) {
+    newErrors.age = 'Введите возраст';
+  } else if (!/^\d+$/.test(user.age)) {
+    newErrors.age = 'Только цифры';
+  }
+  if (!user.address) newErrors.address = 'Введите адрес';
+
+  errors.value = newErrors;
+  return Object.keys(newErrors).length === 0;
+}
+
 const resetForm = () => {
   user.name = null;
   user.surname = null;
   user.stage = null;
   user.age = null;
   user.address = null;
+  errors.value = {};
 }
 
 const handleClose = () => {
@@ -80,9 +105,12 @@ const handleClose = () => {
 }
 
 const handleAccept = () => {
-  emit("accept", user);
-  resetForm();
-  emit('close')
+  if (!validateError()) {
+  } else {
+    emit("accept", user);
+    resetForm();
+    emit('close')
+  }
 }
 </script>
 

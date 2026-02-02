@@ -36,9 +36,7 @@ const useUserStore = defineStore('userStore', () => {
   };
 
   const deleteUser = (id) => {
-    if (users.value[id]) {
-      delete users.value[id];
-    }
+    users.value = users.value.filter((item) => users.value.indexOf(item) !== id);
   };
 
   return {

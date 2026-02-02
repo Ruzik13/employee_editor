@@ -1,25 +1,40 @@
 <template>
   <div class="wrapper">
+    <div>
+      <span
+        v-if="label"
+        :class="{'label-error' : error}"
+        class="label">
+        {{ label }}
+      </span>
     <input
       type="text"
+      :class="{'input-error' : error}"
       :placeholder="placeholder"
       :value="model"
       @input="(e) => model = e.target.value"
     >
-  </div>
+    </div>
 
-  <div
-    v-if="error"
-    class="error-message">
-    {{error}}
+    <span
+      v-if="error"
+      class="error-message">
+      {{error}}
+    </span>
   </div>
 </template>
 
 <script setup>
-defineProps({
+import {watch} from "vue";
+
+const props = defineProps({
   placeholder: {
     type: String,
-    default: 'Введите значение...'
+    default: ''
+  },
+  label: {
+    type: String,
+    default: '',
   },
   error: {
     type: String,
@@ -52,5 +67,27 @@ input:focus {
   box-shadow: 0 4px 8px #cdcdcd;
   border-color: #808080;
   transition: all 0.2s ease;
+}
+
+.label {
+  margin-bottom: 4px;
+  padding-left: 4px;
+
+  color: #808080;
+  font-size: 12px;
+}
+
+.label.label-error {
+  color: #e74c3c;
+}
+
+input.input-error {
+  border-color: #e74c3c;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  padding-left: 4px;
 }
 </style>

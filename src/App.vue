@@ -1,9 +1,11 @@
 <template>
-  <CustomButton
-    @click="openAddForm"
-  >
-    Добавить
-  </CustomButton>
+  <div class="button-section">
+    <CustomButton
+      @click="openAddForm"
+    >
+      Добавить
+    </CustomButton>
+  </div>
   <CustomTable
     :heads="['Имя', 'Фамилия', 'Стаж', 'Возраст', 'Адрес']"
     :data="users"
@@ -73,4 +75,8 @@ const deleteUser = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.button-section {
+  margin-bottom: 16px;
+}
+</style>
